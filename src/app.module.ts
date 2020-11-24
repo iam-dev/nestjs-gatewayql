@@ -5,7 +5,7 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CustomConfigModule } from './config/custom-config.module';
-import { CustomConfigService } from './config/custom-config.service';
+import { GraphQLConfigService } from './config/graphql-config.service';
 import configuration from './config/configuration';
 
 @Module({
@@ -16,12 +16,12 @@ import configuration from './config/configuration';
       load: [configuration],
     }),
     GraphQLGatewayModule.forRootAsync({
-      useFactory: async (customConfigService: CustomConfigService) => ({
-        ...customConfigService.createGatewayOptions(),
+      useFactory: async (graphQLConfigService: GraphQLConfigService) => ({
+        ...graphQLConfigService.createGatewayOptions(),
         autoSchemaFile: join(process.cwd(), 'generated/schema.gql'),
       }),
       imports: [CustomConfigModule],
-      inject: [CustomConfigService],
+      inject: [GraphQLConfigService],
     }),
   ],
   controllers: [AppController],

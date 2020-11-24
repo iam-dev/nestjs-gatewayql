@@ -4,7 +4,7 @@ import { GatewayModuleOptions, GatewayOptionsFactory } from '@nestjs/graphql';
 import { ServiceDefinition } from '@apollo/federation';
 
 @Injectable()
-export class CustomConfigService implements GatewayOptionsFactory {
+export class GraphQLConfigService implements GatewayOptionsFactory {
   constructor(
     private configService: ConfigService
   ){}
@@ -17,12 +17,12 @@ export class CustomConfigService implements GatewayOptionsFactory {
     };
   }
 
-  private serviceList() : Pick<ServiceDefinition, 'name' | 'url'>[] {
+  serviceList() : Pick<ServiceDefinition, 'name' | 'url'>[] {
     const serviceEndpoints = this.configService.get<string>('serviceEndpoints');
     if (Array.isArray(serviceEndpoints)) {
       return serviceEndpoints;
     } else {
-      return [];
+      return [{name: 'default', url: 'http://localhost:3001/graphql'}];
     }
   } 
 }

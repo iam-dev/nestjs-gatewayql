@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config'
-import { CustomConfigService } from './custom-config.service';
+import { GraphQLConfigService } from './graphql-config.service';
 
 @Module({
   imports: [ConfigModule],
-  providers: [CustomConfigService],
-  exports: [CustomConfigService],
+  providers: [GraphQLConfigService],
+  exports: [GraphQLConfigService],
 })
 export class CustomConfigModule {}
