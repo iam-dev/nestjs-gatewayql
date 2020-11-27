@@ -7,4 +7,4 @@ import { GraphQLConfigService } from './graphql-config.service';
   providers: [GraphQLConfigService],
   exports: [GraphQLConfigService],
 })
-export class CustomConfigModule {}
+export class SystemConfigModule {}

@@ -1,0 +1,10 @@
+db:
+  type: 'postgres'
+  typeArray: 
+    - url: ''
+    - host: 'localhost'
+    - port: 5432
+    - username: 'postgres'
+    - password: 'postgres'
+    - database: 'gql_gateway_postgres'
+    - ssl: false

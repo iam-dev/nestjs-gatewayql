@@ -4,23 +4,24 @@ import { GraphQLGatewayModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CustomConfigModule } from './config/custom-config.module';
+import { SystemConfigModule } from './config/system-config.module';
 import { GraphQLConfigService } from './config/graphql-config.service';
-import configuration from './config/configuration';
+import gatewayConfiguration from './config/gateway.configuration';
+import systemConfiguration from './config/system.configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,
-      load: [configuration],
+      load: [gatewayConfiguration, systemConfiguration],
     }),
     GraphQLGatewayModule.forRootAsync({
       useFactory: async (graphQLConfigService: GraphQLConfigService) => ({
         ...graphQLConfigService.createGatewayOptions(),
         autoSchemaFile: join(process.cwd(), 'generated/schema.gql'),
       }),
-      imports: [CustomConfigModule],
+      imports: [SystemConfigModule],
       inject: [GraphQLConfigService],
     }),
   ],

@@ -1,23 +1,36 @@
 http:
-  port: 3000
+  port: 3001
+
 https:
   port: 3443
   tls: {}
+
+admin:
+  port: 9080  
+
 apiEndpoints:
   api:
     host: '*'
+    paths: /
+
 serviceEndpoints:
-  - name: 'test'
-    url: 'http://localhost:8044'
   - name: 'demo'
+    url: 'http://localhost:8044'
+  - name: 'test'
     url: 'http://localhost:8045'
+
 policies:
   - proxy
+  - key-auth
+
 pipelines:
-  adminAPI:
+  default:
     apiEndpoints:
       - api
     policies:
+      - key-auth:
+          action:
+            apiEndpoints: api
       - proxy:
           action:
             serviceEndpoint: demo
