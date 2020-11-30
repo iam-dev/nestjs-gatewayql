@@ -1,3 +1,6 @@
+import { Field } from '@nestjs/graphql';
+
+
 export interface User {
   id?: string;
   firstname?: string;
@@ -6,6 +9,12 @@ export interface User {
   email?: string;
   password?: string;
   redirectUri?: string;
+  role?: UserRole;
   createdAt?: number;
   updatedAt?:number
+}
+
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user'
 }

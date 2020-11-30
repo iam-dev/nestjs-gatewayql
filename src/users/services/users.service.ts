@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { from, Observable, throwError } from 'rxjs';
 import { switchMap, map, catchError} from 'rxjs/operators';
-import { AuthService } from 'src/auth/auth.service';
-import { Repository } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
-import { User } from './entities/user.interface';
+import { AuthService } from '../../auth/services/auth.service';
+import { UserEntity } from '../entities/user.entity';
+import { User } from '../entities/user.interface';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +15,7 @@ export class UsersService {
   ) {}
 
   create(user: User): Observable<User> {
-    return this.authService.hashPassword(user.password).pipe(
+    return this.authService.saltAndHash(user.password).pipe(
       switchMap((passwordHash: string) => {
         const newUser = new UserEntity();
         newUser.firstname = user.firstname;
@@ -23,9 +23,12 @@ export class UsersService {
         newUser.username = user.username;
         newUser.email = user.email;
         newUser.password = passwordHash;
-        newUser.redirectUri = user.redirectUri
+        newUser.redirectUri = user.redirectUri;
+        newUser.role = user.role;
 
-        return from(this.userRepository.save(newUser)).pipe(
+        const createdUser = this.userRepository.create(newUser);
+
+        return from(this.userRepository.save(createdUser)).pipe(
           map((user: User) => {
             const {password, ...result} = user;
             return result;
@@ -61,7 +64,8 @@ export class UsersService {
   updateOne(id: string, user: User): Observable<any> {
     delete user.email;
     delete user.password;
-
+    delete user.role;
+    
     return from(this.userRepository.update(id, user)).pipe(
         switchMap(() => this.findOne(id))
     );
@@ -73,5 +77,20 @@ export class UsersService {
 
   findByUsername(username: string): Observable<User> {
     return from(this.userRepository.findOne({username}));
+  }
+
+  validateUser(email: string, password: string): Observable<User> {
+    return from(this.findByemail(email)).pipe(
+      switchMap((user: User) => this.authService.compareSaltAndHashed(password, user.password).pipe(
+        map((match: boolean) => {
+          if(match) {
+            const {password, ...result} = user;
+            return result;
+          } else {
+            throw Error;
+          }
+        })
+      ))
+    )
   }
 }

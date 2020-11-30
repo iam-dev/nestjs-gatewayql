@@ -6,27 +6,21 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
   @Field()
   id: string;
   
-  @Field()
+  @Field(type => String, { nullable: true })
   firstname: string;
 
-  @Field()
+  @Field(type => String, { nullable: true })
   lastname: string;
 
-  @Field()
+  @Field(type => String, { nullable: true })
   username: string;
 
-  @Field()
+  @Field(type => String, { nullable: true })
   email: string;
 
-  @Field()
+  @Field(type => String, { nullable: true })
   password: string;
 
-  @Field()
+  @Field(type => String, { nullable: true })
   redirectUri: string
-
-  @Field()
-  createdAt: number;
-
-  @Field()
-  updatedAt: number;
 }

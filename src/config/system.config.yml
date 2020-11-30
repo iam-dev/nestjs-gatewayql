@@ -4,10 +4,14 @@ db:
     retryAttempts: 3
     autoLoadEntities: true,
     synchronize: true
-    host: 'postgres'
+    host: 'localhost'
     port: 5432
     username: 'postgres'
     password: 'postgres'
     database: 'gatewayql'
     ssl: false
+crypto:
+  cipherKey: sensitiveKey
+  algorithm: aes256
+  saltRounds: 10
 jwt_secret: 'secret'

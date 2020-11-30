@@ -1,0 +1,55 @@
+version: '3.5'
+
+services:
+  gatewayql:
+  # image is provided by docker build of local app using Dockerfile
+    container_name: gatewayql
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      target: test
+      labels: 
+        - "gatewayql"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/dist
+      - /usr/src/app/node_modules
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229 # FOR DEBUG
+    command: npm run test:e2e
+    env_file: .env
+    networks:
+      - testnet
+    links: 
+      - postgres
+    depends_on:
+      - postgres
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  postgres:
+    container_name: gatewayql_postgres
+    env_file: .env
+    environment: 
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=gatewayql
+      - PGDATA=/data/postgres
+    image: postgres
+    volumes:
+       - postgres:/data/postgres
+    networks:
+      - testnet
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+networks:
+  testnet:
+  
+volumes:
+  postgres:

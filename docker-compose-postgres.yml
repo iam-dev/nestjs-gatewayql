@@ -10,16 +10,6 @@ services:
       - POSTGRES_DB=gatewayql
       - PGDATA=/data/postgres
     image: postgres
-    volumes:
-       - postgres:/data/postgres
-    networks:
-      - gatewayql
     ports:
       - "5432:5432"
-    restart: unless-stopped
 
-networks:
-  gatewayql:
-  
-volumes:
-  postgres:

@@ -24,7 +24,8 @@ import { AuthModule } from './auth/auth.module';
     GraphQLGatewayModule.forRootAsync({
       useFactory: async (graphQLConfigService: GraphQLConfigService) => ({
         ...graphQLConfigService.createGatewayOptions(),
-        autoSchemaFile: join(process.cwd(), 'generated/schema.gql'),
+        autoSchemaFile: join(process.cwd(), 'generated/gateway.gql'),
+        context: ({ req }) => ({ headers: req.headers }),
       }),
       imports: [SystemConfigModule],
       inject: [GraphQLConfigService],
@@ -32,9 +33,10 @@ import { AuthModule } from './auth/auth.module';
     GraphQLModule.forRoot({
       debug: false,
       playground: true,
-      autoSchemaFile: join(process.cwd(), 'generated/schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'generated/admin.gql'),
       sortSchema: true,
-      path: 'admin'
+      path: 'admin',
+      context: ({ req }) => ({ headers: req.headers }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

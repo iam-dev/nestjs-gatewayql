@@ -1,16 +1,33 @@
 FROM node:14.15.1-buster as test
 
+# install build dependencies
+RUN apk update && apk upgrade
+RUN apk add python3 g++ make
+
+# install packages for sending mail (msmtp = sendmail for alpine)
+RUN apk add msmtp
+RUN ln -sf /usr/bin/msmtp /usr/sbin/sendmail
+
+# make target directory for assigning permissions
+RUN mkdir -p /usr/src/app/node_modules
+RUN chown -R node:node /usr/src/app
+
 ENV NODE_ENV=test
 
 WORKDIR /usr/src/app
+# set user
+USER node
 
-COPY package.json ./
-
+# copy package*.json separately to prevent re-running npm install with every code change
+COPY --chown=node:node package*.json ./
 RUN npm install
 
-COPY . .
+# copy the project code (e.g. consider: --only=production)
+COPY --chown=node:node . .
 
 # Copy config
-COPY .env.development.example .env
+COPY example.env .env
+COPY /src/config/*.yml /usr/src/app/config/*.yml
 
-CMD ["node", "dist/main"]
+# expose port 3500
+EXPOSE 3500
