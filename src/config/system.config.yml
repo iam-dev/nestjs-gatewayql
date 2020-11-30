@@ -1,10 +1,13 @@
 db:
-  type: 'postgres'
-  typeArray: 
-    - url: ''
-    - host: 'localhost'
-    - port: 5432
-    - username: 'postgres'
-    - password: 'postgres'
-    - database: 'gql_gateway_postgres'
-    - ssl: false
+  types: 
+    type: 'postgres'
+    retryAttempts: 3
+    autoLoadEntities: true,
+    synchronize: true
+    host: 'postgres'
+    port: 5432
+    username: 'postgres'
+    password: 'postgres'
+    database: 'gatewayql'
+    ssl: false
+jwt_secret: 'secret'

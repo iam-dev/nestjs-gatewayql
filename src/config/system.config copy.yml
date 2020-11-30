@@ -1,0 +1,21 @@
+db:
+  types: 
+    [
+      type: 'sqlite'
+      retryAttempts: 3
+      autoLoadEntities: true,
+      synchronize: true
+      database: 'sqlite.db'
+      type: 'postgres'
+      retryAttempts: 3
+      autoLoadEntities: true,
+      synchronize: true
+    ],
+    [
+      host: 'postgres'
+      port: 5432
+      username: 'postgres'
+      password: 'postgres'
+      database: 'gatewayql'
+      ssl: false
+    ]

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLGatewayModule } from '@nestjs/graphql';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,6 +10,9 @@ import { SystemConfigModule } from './config/system-config.module';
 import { GraphQLConfigService } from './config/graphql-config.service';
 import gatewayConfiguration from './config/gateway.configuration';
 import systemConfiguration from './config/system.configuration';
+import { DatabaseConfig } from './config/databases/database.config';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +29,19 @@ import systemConfiguration from './config/system.configuration';
       imports: [SystemConfigModule],
       inject: [GraphQLConfigService],
     }),
+    GraphQLModule.forRoot({
+      debug: false,
+      playground: true,
+      autoSchemaFile: join(process.cwd(), 'generated/schema.gql'),
+      sortSchema: true,
+      path: 'admin'
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: DatabaseConfig
+    }),
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

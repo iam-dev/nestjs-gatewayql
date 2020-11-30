@@ -1,0 +1,16 @@
+FROM node:14.15.1-buster as test
+
+ENV NODE_ENV=test
+
+WORKDIR /usr/src/app
+
+COPY package.json ./
+
+RUN npm install
+
+COPY . .
+
+# Copy config
+COPY .env.development.example .env
+
+CMD ["node", "dist/main"]
