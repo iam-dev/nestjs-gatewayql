@@ -10,8 +10,6 @@ import { Roles } from "../decorators/roles.decorator";
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-
-    @Inject(forwardRef(() => UsersService))
     private usersService: UsersService
   ){}
 

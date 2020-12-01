@@ -1,48 +1,56 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { isEmail } from 'class-validator';
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { UserRole } from './user.interface';
 
 @ObjectType()
 @Entity()
 export class UserEntity extends BaseEntity {
+  constructor(firstname?: string, lastname?: string, redirectUri?: string){
+    super();
+    this.firstname = firstname || '';
+    this.lastname = lastname || '';
+    this.redirectUri = redirectUri || '';
+  }
+
   @PrimaryGeneratedColumn('uuid')
-  @Field(type => String, { nullable: true })
-  id: string;
+  @Field()
+  id?: string;
 
   @Column({ nullable: true })
-  @Field(type => String, { nullable: true })
-  firstname: string;
+  @Field()
+  firstname?: string;
 
   @Column({ nullable: true })
-  @Field(type => String, { nullable: true })
-  lastname: string;
+  @Field()
+  lastname?: string;
 
   @Column({ unique: true, nullable: false })
-  @Field(type => String, { nullable: true })
-  username: string;
+  @Field()
+  username?: string;
 
   @Column('text', {unique: true})
-  @Field(type => String, { nullable: true })
+  @Field()
   email: string;
 
   @Column({ select: false, nullable: false })
-  @Field(type => String, { nullable: true })
+  @Field()
   password: string;
 
   @Column({ nullable: true })
-  @Field(type => String, { nullable: true })
-  redirectUri: string
+  @Field()
+  redirectUri?: string
 
   @Column({type: 'enum', enum: UserRole, default: UserRole.USER})
-  @Field(type => String, { nullable: true })
-  role: UserRole;
+  @Field()
+  role?: UserRole;
 
   @CreateDateColumn({ type: "timestamp" })
-  @Field(type => String, { nullable: true })
-  createdAt: number;
+  @Field()
+  createdAt?: number;
 
   @UpdateDateColumn({ type: "timestamp" })
-  @Field(type => String, { nullable: true })
+  @Field()
   updatedAt: number;
 
   @BeforeInsert()

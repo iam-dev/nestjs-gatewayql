@@ -3,7 +3,7 @@ import { AuthService } from './services/auth.service';
 import { JwtModule} from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RolesGuard } from './guards/roles.guard';
-import { UsersModule } from './../users/users.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -16,8 +16,8 @@ import { UsersModule } from './../users/users.module';
             signOptions: {expiresIn: '10000s'}
         })
     })
-],
-  providers: [AuthService, RolesGuard],
+  ],
+  providers: [AuthService, RolesGuard, ConfigService],
   exports: [AuthService]
 })
 export class AuthModule {}

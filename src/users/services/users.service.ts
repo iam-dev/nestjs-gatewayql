@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { from, Observable, throwError } from 'rxjs';
@@ -11,6 +11,8 @@ import { User } from '../entities/user.interface';
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
+    
+    @Inject(forwardRef(() => AuthService))
     private authService: AuthService
   ) {}
 
@@ -20,7 +22,11 @@ export class UsersService {
         const newUser = new UserEntity();
         newUser.firstname = user.firstname;
         newUser.lastname = user.lastname;
-        newUser.username = user.username;
+        if (user.username === undefined || user.username === '' || user.username === null) {
+          newUser.username = user.email;
+        } else {
+          newUser.username = user.username;
+        }
         newUser.email = user.email;
         newUser.password = passwordHash;
         newUser.redirectUri = user.redirectUri;

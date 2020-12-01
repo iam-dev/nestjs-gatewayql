@@ -6,16 +6,17 @@ import { UserEntity } from './../entities/user.entity';
 import { User, UserRole } from './../entities/user.interface';
 import { CreateUserInput } from './../dto/create-user.input';
 import { UpdateUserInput } from './../dto/update-user.input';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
+import { UsersPipe } from '../pipes/users.pipe';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation(() => UserEntity)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput): Observable<User | Object> {
+  createUser(@Args('createUserInput', UsersPipe) createUserInput: CreateUserInput): Observable<User | Object> {
     return this.usersService.create(createUserInput).pipe(
       map((user: User) => user),
       catchError(err => of({ error: err.message }))
