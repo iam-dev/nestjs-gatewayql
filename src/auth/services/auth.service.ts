@@ -1,7 +1,7 @@
 import { Injectable,} from '@nestjs/common';
-import { Observable, from } from 'rxjs';
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
+import { Observable, from, throwError } from 'rxjs';
+import *  as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -24,13 +24,13 @@ export class AuthService {
     return from((!password || !hash) ? null : bcrypt.compare(password, hash));
   }
 
-  saltAndHash(password: string): Observable<string> {
-    if (!password || typeof password !== 'string') {
-      return Observable.throw('invalid arguments');
+  saltAndHash(password: string): Observable<any> {
+    if (password === undefined || password === '' || !password || typeof password !== 'string') {
+      return throwError('invalid arguments');
     }
 
-    return bcrypt
+    return from<string>(bcrypt
       .genSalt(this.configService.get<string>('crypto.saltRounds'))
-      .then((salt) => bcrypt.hash(password, salt));
+      .then((salt) => bcrypt.hash(password, salt)));
   }
 }

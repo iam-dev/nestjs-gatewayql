@@ -1,10 +1,9 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { isEmail } from 'class-validator';
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { UserRole } from './user.interface';
 
 @ObjectType()
-@Entity()
+@Entity('users')
 export class UserEntity extends BaseEntity {
   constructor(firstname?: string, lastname?: string, redirectUri?: string){
     super();
@@ -51,7 +50,7 @@ export class UserEntity extends BaseEntity {
 
   @UpdateDateColumn({ type: "timestamp" })
   @Field()
-  updatedAt: number;
+  updatedAt?: number;
 
   @BeforeInsert()
   emailToLowerCase() {

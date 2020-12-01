@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable,Inject, forwardRef } from '@n
 import { Reflector } from "@nestjs/core";
 import { Observable } from 'rxjs';
 import { map } from "rxjs/operators";
-import { User } from '../../users/entities/user.interface';
+import { User } from '../../users/models/user.interface';
 import { UsersService } from '../../users/services/users.service';
 import { Roles } from "../decorators/roles.decorator";
 

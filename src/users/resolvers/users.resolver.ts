@@ -2,8 +2,8 @@ import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
 import { UsersService } from './../services/users.service';
-import { UserEntity } from './../entities/user.entity';
-import { User, UserRole } from './../entities/user.interface';
+import { UserEntity } from '../models/user.entity';
+import { User, UserRole } from '../models/user.interface';
 import { CreateUserInput } from './../dto/create-user.input';
 import { UpdateUserInput } from './../dto/update-user.input';
 import { catchError, map } from 'rxjs/operators';
@@ -16,7 +16,7 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation(() => UserEntity)
-  createUser(@Args('createUserInput', UsersPipe) createUserInput: CreateUserInput): Observable<User | Object> {
+  createUser(@Args('createUserInput', new UsersPipe()) createUserInput: CreateUserInput): Observable<User | Object> {
     return this.usersService.create(createUserInput).pipe(
       map((user: User) => user),
       catchError(err => of({ error: err.message }))
@@ -28,15 +28,25 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
-  @Query(() => UserEntity, { name: 'user' })
+  @Query(() => UserEntity, { name: 'userById' })
   getUser(@Args('id', { type: () => String }) id: string) {
     return this.usersService.findOne(id);
+  }
+
+  @Query(() => UserEntity, { name: 'userByUsername' })
+  getUserByUsername(@Args('username', { type: () => String }) username: string) {
+    return this.usersService.findByUsername(username);
+  }
+
+  @Query(() => UserEntity, { name: 'userByEmail' })
+  getUserByEmail(@Args('email', { type: () => String }) email: string) {
+    return this.usersService.findByemail(email);
   }
 
   @Roles(UserRole.ADMIN)
   @UseGuards(RolesGuard)
   @Mutation(() => UserEntity)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  updateUser(@Args('updateUserInput', new UsersPipe()) updateUserInput: UpdateUserInput) {
     return this.usersService.updateOne(updateUserInput.id, updateUserInput);
   }
 

@@ -1,6 +1,3 @@
-import { Field } from '@nestjs/graphql';
-
-
 export interface User {
   id?: string;
   firstname?: string;
@@ -11,7 +8,7 @@ export interface User {
   redirectUri?: string;
   role?: UserRole;
   createdAt?: number;
-  updatedAt?:number
+  updatedAt?:number;
 }
 
 export enum UserRole {

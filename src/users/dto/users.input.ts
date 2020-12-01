@@ -1,8 +1,7 @@
-import { InputType, Field, PartialType } from '@nestjs/graphql';
-import { UserInput } from './users.input';
+import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateUserInput extends PartialType(UserInput) {
+export class UserInput {
   @Field()
   id?: string;
   
@@ -23,4 +22,10 @@ export class UpdateUserInput extends PartialType(UserInput) {
 
   @Field()
   redirectUri?: string
+
+  @Field()
+  createdAt?: number
+
+  @Field()
+  updatedAt?: number
 }

@@ -13,6 +13,7 @@ import systemConfiguration from './config/system.configuration';
 import { DatabaseConfig } from './config/databases/database.config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { CredentialsModule } from './credentials/credentials.module';
 
 @Module({
   imports: [
@@ -34,7 +35,6 @@ import { AuthModule } from './auth/auth.module';
       debug: false,
       playground: true,
       autoSchemaFile: join(process.cwd(), 'generated/admin.gql'),
-      sortSchema: true,
       path: 'admin',
       context: ({ req }) => ({ headers: req.headers }),
     }),
@@ -44,6 +44,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    CredentialsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
